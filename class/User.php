@@ -40,6 +40,19 @@ class User
         return $this->created_at;
     }
 
+    public function getUser(): array
+    {
+        $result = [];
+
+        $result = [
+            'Nome' => $this->getName(),
+            'Email' => $this->getEmail(),
+            'Password' => $this->getPassword(),
+        ];
+
+        return $result;
+    }
+
     public function setName($name): User
     {
         $this->name = $name;
