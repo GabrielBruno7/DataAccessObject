@@ -70,4 +70,39 @@ class User
         $this->password = $password;
         return $this;
     }
+    
+    public function setCreatedAt($created_at): User
+    {
+        $this->created_at = $created_at;
+        return $this;
+    }
+
+    public function loadUserById($id): array
+    {
+        $database = new Database();
+
+        $data = $database->select("SELECT * FROM users WHERE id LIKE '$id' ");
+        if(!$data){
+            throw new \Exception("O id '$id' do usuario não existe ou não foi encontrado.");
+        }
+
+        $this->setName($data[0]['username']);
+        $this->setEmail($data[0]['email']);
+        $this->setPassword($data[0]['password']);
+        $this->setCreatedAt($data[0]['created_at']);
+
+        $result = [];
+
+        $date = date_create($this->getCreatedAt());
+
+        $result = [
+            'Nome'=> $this->getName(),
+            'Email'=> $this->getEmail(),
+            'Senha'=> $this->getPassword(),
+            'Data de cadastro'=> date_format($date,"d-m-Y")
+        ];
+
+        return $result;
+       
+    }
 }

@@ -9,4 +9,6 @@ $showUser = $user->getUser();
 
 $usuarios = $database->select("SELECT * FROM users ");
 
-echo json_encode($usuarios);
+
+
+echo json_encode($user->loadUserById(8));
