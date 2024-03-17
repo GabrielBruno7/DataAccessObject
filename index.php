@@ -3,12 +3,8 @@
 require_once("Config/config.php");
 
 $database = new Database;
-$user = new User("Gabriel", "Gabriel.bruno@gmail.com", "awvav2k");
+$user = new User();
 
-$showUser = $user->getUser();
+echo json_encode($user->login("sarah_miller", "senha123"));
 
-$usuarios = $database->select("SELECT * FROM users ");
-
-
-
-echo json_encode($user->loadUserById(8));
+echo json_encode($user->getEmail());

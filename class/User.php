@@ -8,14 +8,6 @@ class User
     public string $password;
     public string $created_at;
 
-    public function __construct(string $name, string $email, string $password)
-    {
-        $this->name = $name;
-        $this->email = $email;
-        $this->password = $password;
-        $this->created_at = date('Y-m-d H:i:s');
-    }
-
     public function getId()
     {
         return $this->id;
@@ -104,5 +96,45 @@ class User
 
         return $result;
        
+    }
+
+    public function loadAllUsers()
+    {
+        $database = new Database();
+
+        $data = $database->select("SELECT * FROM users");
+
+        return $data;
+        
+    }
+    public function loadByName(string $name)
+    {
+        $error = "O nome não existe ou não foi encontrado na base de dados";
+
+        $database = new Database();
+
+        $data = $database->select("SELECT * FROM users WHERE username LIKE '%$name%'");
+
+        if(!$data or $name === ""){
+            throw new \Exception($error);
+        }
+
+        return $data;
+        
+    }
+    public function login(string $email, string $password)
+    {
+        $database = new Database();
+
+        $result = $database->select("SELECT * FROM users WHERE email LIKE '$email' AND password LIKE '$password'");
+
+        if (!$result) {
+            throw new \Exception("Email ou senha invalidos ou faltando.");
+        }
+
+        $this->setEmail($email);
+        $this->setPassword($password);
+
+        return $result;
     }
 }
