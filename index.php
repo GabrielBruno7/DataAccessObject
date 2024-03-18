@@ -5,6 +5,5 @@ require_once("Config/config.php");
 $database = new Database;
 $user = new User();
 
-echo json_encode($user->login("sarah_miller", "senha123"));
+$user->updateUser(1, "vitor2ia10@gmail.com");
 
-echo json_encode($user->getEmail());

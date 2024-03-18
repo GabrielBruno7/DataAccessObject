@@ -137,4 +137,64 @@ class User
 
         return $result;
     }
+    public function createUser(string $name, string $email, string $password)
+    {
+        $database = new Database();
+
+        $this->checkingIfEmailAlreadyExists($email, $database);
+
+        $database->select("INSERT INTO users (username, email, password) VALUES ('$name', '$email', '$password')");
+
+    }
+
+    public function checkingIfEmailAlreadyExists(string $email, $database)
+    {
+        $query = $database->select("SELECT * FROM  users WHERE email LIKE '$email'");
+
+        if (count($query) > 0)
+        {
+            throw new \Exception("Esse email já está cadastrado !");
+        }
+
+    }
+
+    public function updateUser(int $id, ?string $newName = null, ?string $newEmail = null)
+    {
+        $database = new Database;
+
+        $result = [];
+
+        $result = $database->select("SELECT * FROM users WHERE id LIKE '$id'");
+
+        $this->updateName($newName, $database, $result, $id);
+
+        $this->updateEmail($newEmail, $database, $result, $id);
+
+    }
+
+    public function updateName($newName, $database, $result, $id)
+    {
+        if ($newName !== null) {
+            $this->setName($result[0]['username']);
+            $this->setName($newName);
+            $database->select("UPDATE users SET username = '$newName' WHERE id LIKE '$id'");
+        }
+    }
+    public function updateEmail($newEmail, $database, $result, $id)
+    {
+        if ($newEmail !== null) {
+            $this->setName($result[0]['email']);
+            $this->setName($newEmail);
+            $database->select("UPDATE users SET email = '$newEmail' WHERE id LIKE '$id'");
+        }
+    }
+
+    
+
+
+
+
+
+
+
 }
