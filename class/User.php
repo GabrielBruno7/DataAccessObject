@@ -180,7 +180,7 @@ class User
             $database->select("UPDATE users SET username = '$newName' WHERE id LIKE '$id'");
         }
     }
-    public function updateEmail($newEmail, $database, $result, $id)
+    public function updateEmail($newEmail, $databrase, $result, $id)
     {
         if ($newEmail !== null) {
             $this->setName($result[0]['email']);
