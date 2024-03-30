@@ -74,6 +74,7 @@ class User
         $database = new Database();
 
         $data = $database->select("SELECT * FROM users WHERE id LIKE '$id' ");
+
         if(!$data){
             throw new \Exception("O id '$id' do usuario não existe ou não foi encontrado.");
         }
@@ -126,7 +127,8 @@ class User
     {
         $database = new Database();
 
-        $result = $database->select("SELECT * FROM users WHERE email LIKE '$email' AND password LIKE '$password'");
+        $result = $database->select(
+        "SELECT * FROM users WHERE email LIKE '$email' AND password LIKE '$password'");
 
         if (!$result) {
             throw new \Exception("Email ou senha invalidos ou faltando.");
@@ -143,8 +145,11 @@ class User
 
         $this->checkingIfEmailAlreadyExists($email, $database);
 
-        $database->select("INSERT INTO users (username, email, password) VALUES ('$name', '$email', '$password')");
+        $database->select("INSERT INTO users (username, email, password) VALUES ('$name','$email','$password')"
+        );
 
+        $message = "Usuario $name criado com sucesso!";
+        echo "<script>alert('$message');</script>";
     }
 
     public function checkingIfEmailAlreadyExists(string $email, $database)
@@ -158,42 +163,49 @@ class User
 
     }
 
-    public function updateUser(int $id, ?string $newName = null, ?string $newEmail = null)
+    public function deleteUser(int $id)
     {
-        $database = new Database;
+        $database = new Database();
+        $database->select("DELETE from users WHERE id = '$id'");
 
-        $result = [];
+        $data = $database->select("SELECT id FROM users WHERE id = '$id'");
 
-        $result = $database->select("SELECT * FROM users WHERE id LIKE '$id'");
-
-        $this->updateName($newName, $database, $result, $id);
-
-        $this->updateEmail($newEmail, $database, $result, $id);
-
-    }
-
-    public function updateName($newName, $database, $result, $id)
-    {
-        if ($newName !== null) {
-            $this->setName($result[0]['username']);
-            $this->setName($newName);
-            $database->select("UPDATE users SET username = '$newName' WHERE id LIKE '$id'");
+        if(!$data){
+            $message = 'O usuário foi excluido.';
+            echo "<script>alert('$message');</script>";
         }
-    }
-    public function updateEmail($newEmail, $databrase, $result, $id)
-    {
-        if ($newEmail !== null) {
-            $this->setName($result[0]['email']);
-            $this->setName($newEmail);
-            $database->select("UPDATE users SET email = '$newEmail' WHERE id LIKE '$id'");
+
+        if($data === $id){
+            $message = "Algo deu errado e o usuario não foi deletado";
+            echo "<script>alert('$message');</script>";
         }
     }
 
-    
 
+    public function updateUser(int $id, string $field, string $newParam)
+    {
+        $this->loadUserById($id);
 
+        $fields = array("username", "email", "password");
 
+        if ($field !== $fields[0] && $field !== $fields[1] && $field !== $fields[2] )
+        {
+            throw new \Exception(
+                "O campo '$field' não existe,
+                Escolha entre username,
+                email ou password"
+            );
+        }
 
+        $database = new Database();
+        $database->select("UPDATE users SET $field = '$newParam' WHERE id = '$id';");
+
+        $this->setEmail($newParam);
+        
+        $message = "O $field foi alterado para $newParam";
+
+        echo "<script>alert('$message');</script>";
+    }
 
 
 

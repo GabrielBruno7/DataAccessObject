@@ -5,5 +5,8 @@ require_once("Config/config.php");
 $database = new Database;
 $user = new User();
 
-$user->updateUser(1, "vitor2ia10@gmail.com");
+$user->login("larissa@gmail.com", "larissa123");
+header('Location: views\home.html');
+exit;
+
 
